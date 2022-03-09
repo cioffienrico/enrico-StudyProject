@@ -1,17 +1,7 @@
 version: '3.7'
 
 services:
-  project-webapi:
-    build:
-      context: .
-      dockerfile: StudyProject.Webapi/Dockerfile
-    ports:
-      - "5000:80"
-    depends_on:
-      - project-db
-    networks:
-      - project-net
-
+  
   project-db:
     image: postgres:9.5
     restart: always
@@ -23,6 +13,19 @@ services:
       - 5432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - project-net
+   
+  project-webapi:
+    build:
+      context: .
+      dockerfile: StudyProject.Webapi/Dockerfile
+    environment:
+     CONN: "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres"
+    ports:
+      - "5000:80"
+    depends_on:
+      - project-db
     networks:
       - project-net
 
